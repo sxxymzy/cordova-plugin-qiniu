@@ -2,85 +2,35 @@
 
 * Android
 
-## 注册账号
-
-1. [注册](https://portal.qiniu.com/signup)七牛帐号，完成标准用户认证 
-2. 创建空间(Bucket)	
-
 ## 插件使用
-
-1.安装插件：
-
-```shell
-#推荐直接把插件下载到根目录，
-
-git clone https://github.com/yumemor/cordova-plugin-qiniu.git
-
-配置文件修改过后 在项目根目录添加插件, 这样不需要修改配置文件后重新编译。
-
-cordova plugins add cordova-plugin-qiniu
-```
-
-2.生成上传凭证
-
-Token生成算法：http://developer.qiniu.com/docs/v6/api/overview/security.html#upload-token
-
-Token在线生成地址：http://jsfiddle.net/gh/get/extjs/4.2/icattlecoder/jsfiddle/tree/master/uptoken
-
-使用在线生成的 UploadToken 有时间限制，最长为 12 小时。
-
-
-如果想生成永久的 UploadToken 需要使用七牛提供的服务端包来生成有效期为 `10年` Token。
-
-> 由于Android项目容易被反编译，所以这里建议只放token，不要放ak以及sk。
-
-
-3.修改配置文件(src/android/java/QiniuKey.java)：
-
-```java
-package org.cordova.plugin.qiniu;
-
-/**
- * @author yumemor
- * 
- *         七牛云配置
- */
-public interface QiniuKey {
-	/**
-	 * 	上传Token
-	 */
-	String UPLOAD_TOKEN = "";
-	/**
-	 * 文件前缀分隔符
-	 */
-	String FILE_PREFIX_SEPARATOR = "/";
-}
-```
-
-文件分隔符代表上传到七牛空间的文件前缀:
-
-![image](http://oct8d1mqf.bkt.clouddn.com/2016-09-01-13%3A29%3A53.jpg)
-
-如果没有设置文件前缀，文件分隔符不生效。
-
-3.上传文件
-
-Js调用：
 
 ```javascript
 
 //上传参数
-var options = new Object();
-options.prefix = "hh";	//文件前缀
-options.filePath = "/storage/emulated/0/Android/data/io.hello.cordova.cache/2013424231.jpg"	//文件完整路径
+const filePath = "/storage/emulated/0/Android/data/io.hello.cordova.cache/2013424231.jpg";	// local file path
+const remoteKey = "prefix/io.hello.cordova.cache/2013424231.jpg"; // remote file key
+const token = "aTibxa7eU0wyp0ZYzDfxHksTvk9wor0I1DKgEwp1:mN-DVcJD9vZRD-yrAZ4FX6Fm9L8=:eyJzY29wZSI6InRlc3="; // up token
+const callbacks = {
+	successCbk: () => {
+		// upload complete ...
+	},
+	progressCbk: () =>{
+		// upload progress handle...
+	},
+	errorCbk: () => {
+		// error...
+	}
+};
+
+const options = {
+	params: {}, // Map<String, String> 自定义变量，key 必须以 x: 开始
+	mimeType: "", // String 指定文件的 mimeType
+	checkCrc: true,
+    isCancelled: () => false  //取消上传，当 isCancelled() 返回 true 时，不再执行更多上传
+}
 
 //上传文件
-navigator.qiniu.upload(options,function(re){
-    alert("success:" + re);
-},function(re){
-    console.dir(re);
-    alert("error:" + re);
-})
+navigator.qiniu.upload(filePath, remoteKey, token, callbacks, options);
 
 ```
 

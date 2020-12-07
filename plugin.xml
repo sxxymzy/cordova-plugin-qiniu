@@ -16,14 +16,13 @@
 			</feature>
 		</config-file>
 		<!--Config Libs-->
-		<source-file src="src/android/libs/android-async-http-1.4.6.jar" target-dir="libs" framework="true" />
-		<source-file src="src/android/libs/happy-dns-0.2.4.jar" target-dir="libs" framework="true" />
-		<source-file src="src/android/libs/httpclient-4.3.6.jar" target-dir="libs" framework="true" />
-		<source-file src="src/android/libs/qiniu-android-sdk-7.0.4.jar" target-dir="libs" framework="true" />
+		<lib-file src="src/android/libs/okhttp-4.9.0.jar" />
+		<lib-file src="src/android/libs/happy-dns-0.2.16.jar" />
+		<lib-file src="src/android/libs/qiniu-android-sdk-8.0.5.jar" />
 		<!--Config Source-->
 		<source-file src="src/android/java/QiniuPlugin.java" target-dir="src/org/cordova/plugin/qiniu/"/>
-		<source-file src="src/android/java/QiniuKey.java" target-dir="src/org/cordova/plugin/qiniu/"/>
-		<source-file src="src/android/java/StrUtils.java" target-dir="src/org/cordova/plugin/qiniu/"/>
+		<!-- <source-file src="src/android/java/QiniuKey.java" target-dir="src/org/cordova/plugin/qiniu/"/> -->
+		<!-- <source-file src="src/android/java/StrUtils.java" target-dir="src/org/cordova/plugin/qiniu/"/> -->
 	</platform>
 </plugin>
 

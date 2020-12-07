@@ -15,9 +15,12 @@ import org.json.JSONObject;
 
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadManager;
+import com.qiniu.android.storage.UploadOptions;
 
 import java.net.URLDecoder;
+import java.util.Map;
 
 import android.util.Log;
 
@@ -42,7 +45,7 @@ public class QiniuPlugin extends CordovaPlugin implements UpCompletionHandler {
 	}
 
 	@Override
-	public boolean execute(String action, JSONArray args,CallbackContext callbackContext) throws JSONException {
+	public boolean execute(String action, JSONArray args, CallbackContext callbackContext) throws JSONException {
 		this.callbackContext = callbackContext;
 		try {
 			Method method = this.getClass().getDeclaredMethod(action,JSONArray.class);
@@ -65,12 +68,24 @@ public class QiniuPlugin extends CordovaPlugin implements UpCompletionHandler {
 	}
 
 	private void uploadFile(JSONArray args) throws JSONException,UnsupportedEncodingException {
-		String prefix = args.optJSONObject(0).getString("prefix");
-		String filePath = args.optJSONObject(0).getString("filePath");
-		String name = StrUtils.appendPrefix(prefix, StrUtils.getFileName(filePath));	//获取文件名称 添加前缀
+		// String prefix = args.optJSONObject(0).getString("prefix");
+		// String filePath = args.optJSONObject(0).getString("filePath");
+		// String name = StrUtils.appendPrefix(prefix, StrUtils.getFileName(filePath));	//获取文件名称 添加前缀
+        // args: [filePath, remoteKey, token, callbacks.progressCbk, options]);
+		String filePath = args.optString(0);
+		String remoteKey = args.optString(1);
+		String token = args.optString(2);
+		// JSONObject progressCbk = args.optJSONObject(3);
+		 JSONObject options = args.optJSONObject(4);
+		UploadOptions uploadOptions = new UploadOptions(null, null, options.optBoolean("checkCrc"), new UpProgressHandler(){
+            public void progress(String key, double percent){
+				Log.i("qiniu", key + ": " + percent);
+				// todo progress cbk
+            }
+        }, null); // todo can't cancel
 		filePath = URLDecoder.decode(filePath, "UTF-8");	//文件路径解码
 		filePath = filePath.replace("file://","");	//去掉 file:// 路径。
-		uploadManager.put(filePath, name, QiniuKey.UPLOAD_TOKEN, this, null);
+		uploadManager.put(filePath, remoteKey, token, this, uploadOptions);
 	}
 
 	@Override
