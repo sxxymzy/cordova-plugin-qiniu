@@ -23,6 +23,9 @@
 		<source-file src="src/android/java/QiniuPlugin.java" target-dir="src/org/cordova/plugin/qiniu/"/>
 		<!-- <source-file src="src/android/java/QiniuKey.java" target-dir="src/org/cordova/plugin/qiniu/"/> -->
 		<!-- <source-file src="src/android/java/StrUtils.java" target-dir="src/org/cordova/plugin/qiniu/"/> -->
+		<framework src="org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.2.41" />
+		<framework src="com.squareup.okio:okio:2.9.0" />
+
 	</platform>
 </plugin>
 
